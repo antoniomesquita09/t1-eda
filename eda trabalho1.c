@@ -50,7 +50,7 @@ unsigned char pilha_pop_num (Pilha* p)
 	if (pilha_vazia(p))
 	{
 		printf("Pilha vazia.\n");
-		return f;
+		return 'f';
 	}
 	t = p->topo;
 	v = t->num;
@@ -66,7 +66,7 @@ unsigned char pilha_pop_op (Pilha* p)
 	if (pilha_vazia(p))
 	{
 		printf("Pilha vazia.\n");
-		return f;
+		return 'f';
 	}
 	t = p->topo;
 	v = t->info;
@@ -96,7 +96,7 @@ int pilha_vazia (Pilha* p)
 
 typedef struct avr
 {
-	int tipo
+	int tipo;
 	int valor;
 	char oper;
 	struct avrExp* esq;
@@ -125,7 +125,7 @@ avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
 	return p;
 }
 
-NoArv* arv_libera (avrExp* a)
+avrExp* arv_libera (avrExp* a)
 {
 	if (!arv_vazia(a))
 	{
@@ -144,10 +144,10 @@ int arv_vazia (avrExp* a)
 }
 
 
-Pilha* infixtopostfix(string s)
+Pilha* infixtopostfix(char s[])
 {
-	temp = pilha_cria;
-	post = pilha_cria;
+	Pilha* temp = pilha_cria;
+	Pilha* post = pilha_cria;
 	char temp2;
 	const char x[2] = " ";
 	int i = 0, j, n = 1, temp3;
@@ -165,7 +165,7 @@ Pilha* infixtopostfix(string s)
         			printf("Memoria insuficiente.\n");
         			exit(1); 
     			}
-				ptr[0] = s[i]
+				ptr[0] = s[i];
 				while(s[i+1] >= '0' && s[i+1] <= '9')
 				{
 					i++;
@@ -224,7 +224,7 @@ Pilha* infixtopostfix(string s)
 }
 
 
-void arvore()
+/*void arvore()
 {
 	s[] = '10 + 15';
 	char temp;
@@ -238,7 +238,7 @@ void arvore()
 	{
 		
 	}
-}
+}*/
 
 
 
