@@ -3,9 +3,9 @@
 
 struct elemento
 {
-	int tipo;
-	int num;
-	char info;
+	int tipo; /* 0 para numero, 1 para simbolos */
+	int num; /* numero que vai ser calculado, se nao for utilizar por ser simbolo sera NULL */
+	char info; /* simbolo, se nao for o caso, sendo numero, sera NULL */
 	struct elemento *prox
 };
 typedef struct elemento Elemento;
@@ -187,9 +187,13 @@ Pilha* infixtopostfix(string s)
 					pilha_push(post, temp2, 1, NULL);
 					pilha_push(temp, s[i], 1, NULL);
 				}
-				else
+				else if( temp2 != 'f')
 				{
 					pilha_push(temp, temp2, 1, NULL);
+					pilha_push(temp, s[i], 1, NULL);
+				}
+				else
+				{
 					pilha_push(temp, s[i], 1, NULL);
 				}
 			}
