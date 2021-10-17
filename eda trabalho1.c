@@ -3,7 +3,9 @@
 
 struct elemento
 {
-	unsigned char info;
+	int tipo;
+	int num;
+	char info;
 	struct elemento *prox
 };
 typedef struct elemento Elemento;
@@ -24,15 +26,15 @@ Pilha* pilha_cria (void)
 	return p;
 }
 
-void pilha_push (Pilha* p, float v)
+void pilha_push (Pilha* p, char v)
 {
 	Elemento* n = (Elemento*) malloc(sizeof(Elemento));
 	if (n==NULL)
 	{
-		printf("Sem memória para alocar elemento.\n");
+		printf("Sem memÃ³ria para alocar elemento.\n");
 		exit(1);
 	}
-	/* insere elemento na próxima posição livre */
+	/* insere elemento na prÃ³xima posiÃ§Ã£o livre */
 	n->info = v;
 	n->prox = p->topo;
 	p->topo = n;
@@ -73,24 +75,38 @@ int pilha_vazia (Pilha* p)
 	return 0;
 }
 
-struct noArv {
-	unsigned char info;
-	struct noArv* esq;
-	struct noArv* dir;
-};
-
-NoArv* arv_cria (char c, NoArv* sae, NoArv* sad)
+typedef struct avr
 {
-	NoArv* p=(NoArv*)malloc(sizeof(NoArv));
+	int tipo
+	int valor;
+	char oper;
+	struct avrExp* esq;
+	struct avrExp* dir;
+	struct avrExp* pai;
+} avrExp;
+
+avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
+{
+	avrExp* p=(avrExp*)malloc(sizeof(avrExp));
 	if(p==NULL)
 		exit(1);
-	p->info = c;
+	p->tipo = t;
+	if(t == 0)
+	{
+		p->valor = t;
+		p->oper = NULL;
+	}
+	if(t == 1)
+	{
+		p->valor = NULL;
+		p->oper = c;
+	}
 	p->esq = sae;
 	p->dir = sad;
 	return p;
 }
 
-NoArv* arv_libera (NoArv* a)
+NoArv* arv_libera (avrExp* a)
 {
 	if (!arv_vazia(a))
 	{
@@ -101,18 +117,9 @@ NoArv* arv_libera (NoArv* a)
 	return NULL;
 }
 
-struct avrExp
-{
-	int tipo
-	int valor;
-	char oper;
-	struct avrExp* esq;
-	struct avrExp* dir;
-	struct avrExp* pai;
-};
 
 
-int arv_vazia (NoArv* a)
+int arv_vazia (avrExp* a)
 {
 	return a==NULL;
 }
@@ -137,14 +144,16 @@ Pilha* infixtopostfix(string s)
 	temp = pilha_cria;
 	post = pilha_cria;
 	char temp2;
+	const char x[2] = " ";
 	i = 0;
 	while(s[i] != '\0')
 	{
 		if(s[i] == ' ')
+			pilha_push(post, s[i]);
 			i++;
 		else
 		{
-			if(s[i] >= 0 && s[i] <= 9)
+			if(s[i] >= '0' && s[i] <= '9')
 			{
 				pilha_push(post, s[i]);
 			}
@@ -195,10 +204,14 @@ void arvore()
 	char temp;
 	post = infixtopostfix(s);
 	temp = pilha_pop (post);
-	NoArv* arv_cria (temp, NULL, NULL);
+	if (temp == '+' or temp == '-' or temp == '/' or temp == '*')
+	{
+		avrExp* a = arv_cria (temp, NULL, NULL, 1, NULL);
+	}
+	else
+	{
+		
+	}
 }
-
-
-
 
 
