@@ -1,14 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h> 
 
-struct elemento
+typedef struct elemento
 {
 	int tipo; /* 0 para numero, 1 para simbolos */
 	int num; /* numero que vai ser calculado, se nao for utilizar por ser simbolo sera NULL */
 	char info; /* simbolo, se nao for o caso, sendo numero, sera NULL */
-	struct elemento *prox
-};
-typedef struct elemento Elemento;
+	struct elemento *prox;
+} Elemento;
 
 /* estrutura da pilha */
 struct pilha
@@ -179,10 +178,10 @@ Pilha* infixtopostfix(char s[])
 				free(ptr);
 				pilha_push(post, NULL, 0, temp3);
 			}
-			else if(s[i] == '+' or s[i] == '-' or s[i] == '/' or s[i] == '*')
+			else if(s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*')
 			{
 				temp2 = pilha_pop_op (temp);
-				if(temp2 == '*' or temp2 == '/')
+				if(temp2 == '*' || temp2 == '/')
 				{
 					pilha_push(post, temp2, 1, NULL);
 					pilha_push(temp, s[i], 1, NULL);
