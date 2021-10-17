@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h> 
 
 struct elemento
 {
@@ -14,6 +14,7 @@ typedef struct elemento Elemento;
 struct pilha
 {
 	Elemento* topo; /* aponta para o topo da pilha */
+	
 };
 typedef struct pilha Pilha;
 
@@ -26,7 +27,7 @@ Pilha* pilha_cria (void)
 	return p;
 }
 
-void pilha_push (Pilha* p, char v)
+void pilha_push (Pilha* p, char v, int tipo2, int num2)
 {
 	Elemento* n = (Elemento*) malloc(sizeof(Elemento));
 	if (n==NULL)
@@ -36,11 +37,29 @@ void pilha_push (Pilha* p, char v)
 	}
 	/* insere elemento na próxima posição livre */
 	n->info = v;
+	n->tipo = tipo2;
+	n->	num = num2;
 	n->prox = p->topo;
 	p->topo = n;
 }
 
-unsigned char pilha_pop (Pilha* p)
+unsigned char pilha_pop_num (Pilha* p)
+{
+	Elemento* t;
+	int v;
+	if (pilha_vazia(p))
+	{
+		printf("Pilha vazia.\n");
+		return f;
+	}
+	t = p->topo;
+	v = t->num;
+	p-> topo = t->prox;
+	free(t);
+	return v;
+}
+
+unsigned char pilha_pop_op (Pilha* p)
 {
 	Elemento* t;
 	unsigned char v;
@@ -124,20 +143,6 @@ int arv_vazia (avrExp* a)
 	return a==NULL;
 }
 
-/*char convert(string s)
-{
-	i = 0, j = 0;
-	char temp[250];
-	unsigned char temp2;
-	while(s[i] != '\0')
-	{
-		while(s[i] != '(' or s[i] != '+' or s[i] != '-' or s[i] != '/' or s[i] != '*' or s[i] != ')' or s[i] != ' ')
-		{
-			temp[j] = s[i];
-		}
-		
-	}
-}*/
 
 Pilha* infixtopostfix(string s)
 {
@@ -145,53 +150,70 @@ Pilha* infixtopostfix(string s)
 	post = pilha_cria;
 	char temp2;
 	const char x[2] = " ";
-	i = 0;
+	int i = 0, j, n = 1, temp3;
 	while(s[i] != '\0')
 	{
 		if(s[i] == ' ')
-			pilha_push(post, s[i]);
 			i++;
 		else
 		{
 			if(s[i] >= '0' && s[i] <= '9')
 			{
-				pilha_push(post, s[i]);
+				char *ptr = (char*) malloc(sizeof(char));
+				if (ptr==NULL)
+				{
+        			printf("Memoria insuficiente.\n");
+        			exit(1); 
+    			}
+				ptr[0] = s[i]
+				while(s[i+1] >= '0' && s[i+1] <= '9')
+				{
+					i++;
+					ptr = realloc (ptr, (n+1) * sizeof (char));
+					ptr[n] = s[i];
+					n++;
+					
+				}
+				temp3 = atoi(ptr);
+				n = 1;
+				free(ptr);
+				pilha_push(post, NULL, 0, temp3);
 			}
 			else if(s[i] == '+' or s[i] == '-' or s[i] == '/' or s[i] == '*')
 			{
-				temp2 = pilha_pop (temp);
+				temp2 = pilha_pop_op (temp);
 				if(temp2 == '*' or temp2 == '/')
 				{
-					pilha_push(post, temp2);
-					pilha_push(temp, s[i]);
+					pilha_push(post, temp2, 1, NULL);
+					pilha_push(temp, s[i], 1, NULL);
 				}
 				else
 				{
-					pilha_push(temp, temp2);
-					pilha_push(temp, s[i]);
+					pilha_push(temp, temp2, 1, NULL);
+					pilha_push(temp, s[i], 1, NULL);
 				}
 			}
 			else if(s[i] == '(')
 			{
-				pilha_push(temp, s[i]);
+				pilha_push(temp, s[i], 1, NULL);
 			}
 			else if (s[i] == ')')
 			{
-				temp2 = pilha_pop (temp);
+				temp2 = pilha_pop_op (temp);
 				while(temp2 != '(')
 				{
-					pilha_push(temp2, s[i]);
-					temp2 = pilha_pop (temp);
+					pilha_push(temp2, s[i], 1, NULL);
+					temp2 = pilha_pop_op (temp);
 				}
 			}
 			i++;
 		}
 	}
-	temp2 = pilha_pop (temp);
+	temp2 = pilha_pop_op (temp);
 	while( temp2 != 'f')
 	{
-		pilha_push(temp2, s[i]);
-		temp2 = pilha_pop (temp);
+		pilha_push(post, temp2, 1, NULL);
+		temp2 = pilha_pop_op (temp);
 	}
 	pilha_libera (temp);
 	return post;
@@ -213,5 +235,7 @@ void arvore()
 		
 	}
 }
+
+
 
 
