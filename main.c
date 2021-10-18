@@ -25,6 +25,13 @@ Pilha* pilha_cria (void)
 	return p;
 }
 
+int pilha_vazia (Pilha* p)
+{
+	if(p->topo == NULL)
+		return 1;
+	return 0;
+}
+
 void pilha_push (Pilha* p, char v, int tipo2, int num2)
 {
 	Elemento* n = (Elemento*) malloc(sizeof(Elemento));
@@ -41,7 +48,7 @@ void pilha_push (Pilha* p, char v, int tipo2, int num2)
 	p->topo = n;
 }
 
-unsigned char pilha_pop_num (Pilha* p)
+int pilha_pop_num (Pilha* p)
 {
 	Elemento* t;
 	int v;
@@ -85,13 +92,6 @@ void pilha_libera (Pilha* p)
 	free(p);
 }
 
-int pilha_vazia (Pilha* p)
-{
-	if(p->topo == NULL)
-		return 1;
-	return 0;
-}
-
 typedef struct avr
 {
 	int tipo;
@@ -101,6 +101,14 @@ typedef struct avr
 	struct avr* dir;
 	struct avr* pai;
 } avrExp;
+
+
+
+int arv_vazia (avrExp* a)
+{
+	return a==NULL;
+}
+
 
 avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
 {
@@ -134,21 +142,13 @@ avrExp* arv_libera (avrExp* a)
 	return NULL;
 }
 
-
-
-int arv_vazia (avrExp* a)
-{
-	return a==NULL;
-}
-
-
 Pilha* infixtopostfix(char s[])
 {
 	Pilha *temp = pilha_cria();
 	Pilha *post = pilha_cria();
 	char temp2;
-	const char x[2] = " ";
-	int i = 0, j, n = 1, temp3;
+	// const char x[2] = " ";
+	int i = 0, n = 1, temp3;
 	while(s[i] != '\0')
 	{
 		if(s[i] == ' ')
@@ -238,6 +238,24 @@ Pilha* infixtopostfix(char s[])
 	}
 }*/
 
+int main(void) {
+	char s[8] = "1+2*3-4\0";
 
+	Pilha* stack = infixtopostfix(s);
 
+    printf("Postfix:\n");
 
+    while (stack->topo != NULL) {
+		if (stack->topo->tipo == 0) {
+            printf("%d ", pilha_pop_num(stack));
+			continue;
+		}
+		printf("%c ", pilha_pop_op(stack));
+	}
+    printf("\n");
+
+	return 1;
+}
+
+// Result: + - 4 * 3 2 1
+// Should be: 1 2 3 * + 4 -
