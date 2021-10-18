@@ -54,7 +54,7 @@ int isGreater(char a, char b);
 Fila* infixtopostfix(char s[]);
 
 int main(void) {
-    char s[100] = "1+2*3/4-5*(6+7)\0";
+    char s[100] = "1+(2-3)/4-5*6+7\0";
     Fila* queue = infixtopostfix(s);
 
     printf("Postfix:\n");
