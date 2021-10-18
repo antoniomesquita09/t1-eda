@@ -54,7 +54,7 @@ int isGreater(char a, char b);
 Fila* infixtopostfix(char s[]);
 
 int main(void) {
-    char s[100] = "1+2*(3/4-5)\0";
+    char s[100] = "1+2*3/4-5*(6+7)\0";
     Fila* queue = infixtopostfix(s);
 
     printf("Postfix:\n");
@@ -188,8 +188,6 @@ Fila* infixtopostfix(char s[]) {
         if (isNumber(*aux)) {
             int num = atoi(aux);
 
-            // printf("i[%d]: %d\n", i, num);
-
             value->tipo = 0;
             value->num = num;
             value->info = NULL;
@@ -211,7 +209,6 @@ Fila* infixtopostfix(char s[]) {
 
             if (*aux == ')') {
                 while(previousOperator != '(') {
-                    printf("previous: %c\n", previousOperator);
                     fila_insere(queue, previousNode);
                     previousNode = pilha_pop(stack);
                     previousOperator = previousNode->info;
@@ -230,8 +227,10 @@ Fila* infixtopostfix(char s[]) {
             }
         }
 
-        if (*aux == ')')
-            break;
+        if (*aux == ')') {
+            i++;
+            continue;
+        }
 
         pilha_push(stack, value);
         i++;
