@@ -131,6 +131,11 @@ avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
 	return p;
 }
 
+int arv_vazia (avrExp* a)
+{
+	return a==NULL;
+}
+
 avrExp* arv_libera (avrExp* a)
 {
 	if (!arv_vazia(a))
@@ -147,7 +152,6 @@ Pilha* infixtopostfix(char s[])
 	Pilha *temp = pilha_cria();
 	Pilha *post = pilha_cria();
 	char temp2;
-	// const char x[2] = " ";
 	int i = 0, n = 1, temp3;
 	while(s[i] != '\0')
 	{
@@ -177,7 +181,7 @@ Pilha* infixtopostfix(char s[])
 				free(ptr);
 				pilha_push(post, 'N', 0, temp3);
 			}
-			else if(s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*')
+			else if(s[i] == '/' || s[i] == '*')
 			{
 				temp2 = pilha_pop_op (temp);
 				if(temp2 == '*' || temp2 == '/')
@@ -188,6 +192,23 @@ Pilha* infixtopostfix(char s[])
 				else if( temp2 != 'f')
 				{
 					pilha_push(temp, temp2, 1, -1);
+					pilha_push(temp, s[i], 1, -1);
+				}
+				else
+				{
+					pilha_push(temp, s[i], 1, -1);
+				}
+			}
+			else if(s[i] == '+' || s[i] == '-')
+			{
+				temp2 = pilha_pop_op (temp);
+				if(temp2 != 'f' && temp2 != '(')
+				{
+					while(temp2 != 'f' && temp2 != '(')
+					{
+						pilha_push(post, temp2, 1, -1);
+						temp2 = pilha_pop_op (temp);
+					}	
 					pilha_push(temp, s[i], 1, -1);
 				}
 				else
@@ -257,5 +278,5 @@ int main(void) {
 	return 1;
 }
 
-// Result: + - 4 * 3 2 1
-// Should be: 1 2 3 * + 4 -
+// Result: - 5 / 4 * 3 + 2 1 => 1 2 + 3 * 4 / 5 -
+// Should be: 1 2 3 * 4 / + 5 -
