@@ -187,8 +187,15 @@ Pilha* infixtopostfix(char s[])
 				}
 				else if( temp2 != 'f')
 				{
-					pilha_push(temp, temp2, 1, -1);
+					pilha_push(post, temp2, 1, -1);
+					temp2 = pilha_pop_op (temp);
+					while(temp2 != 'f')
+					{
+						pilha_push(post, temp2, 1, -1);
+						temp2 = pilha_pop_op (temp);
+					}
 					pilha_push(temp, s[i], 1, -1);
+					
 				}
 				else
 				{
