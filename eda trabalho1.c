@@ -181,15 +181,9 @@ Pilha* infixtopostfix(char s[])
 					pilha_push(post, temp2, 1, -1);
 					pilha_push(temp, s[i], 1, -1);
 				}
-				else if( temp2 != 'f' && temp2 != '(')
+				else if( temp2 != 'f')
 				{
 					pilha_push(temp, temp2, 1, -1);
-					pilha_push(temp, s[i], 1, -1);
-					
-				}
-				else if (temp2 == '(')
-				{
-					pilha_push(post, temp2, 1, -1);
 					pilha_push(temp, s[i], 1, -1);
 				}
 				else
