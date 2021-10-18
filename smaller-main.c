@@ -54,7 +54,7 @@ int isGreater(char a, char b);
 Fila* infixtopostfix(char s[]);
 
 int main(void) {
-    char s[10] = "1+2*3/4-5\0";
+    char s[100] = "1+2*(3/4-5)\0";
     Fila* queue = infixtopostfix(s);
 
     printf("Postfix:\n");
@@ -157,12 +157,18 @@ int isNumber(char c) {
     return c >= '0' && c <= '9';
 }
 
-int isGreater(char a, char b) {
-    if (b == '*' || b == '/')
+int isGreater(char previous, char current) {
+    if (current == '(')
         return 0;
-    if (a == '*')
+    if (previous == '*' || previous == '/')
         return 1;
-    if (a == '/')
+    if (previous == '+' && current == '+')
+        return 1;
+    if (previous == '+' && current == '-')
+        return 1;
+    if (previous == '-' && current == '+')
+        return 1;
+    if (previous == '-' && current == '-')
         return 1;
     return 0;
 }
@@ -203,17 +209,29 @@ Fila* infixtopostfix(char s[]) {
 
             char previousOperator = previousNode->info;
 
-            // printf("previous: %c\n", previousOperator);
-            // printf("current: %c\n", *aux);
-            // printf("%c is greater than %c: %d\n", *aux, previousOperator, isGreater(*aux, previousOperator));
+            if (*aux == ')') {
+                while(previousOperator != '(') {
+                    printf("previous: %c\n", previousOperator);
+                    fila_insere(queue, previousNode);
+                    previousNode = pilha_pop(stack);
+                    previousOperator = previousNode->info;
+                }
+                break;
+            }
 
-            if (!isGreater(*aux, previousOperator)) {
+            // printf("current: %c\n", *aux);
+            // printf("%c is greater than %c: %d\n", previousOperator, *aux, isGreater(*aux, previousOperator));
+
+            if (isGreater(previousOperator, *aux)) {
                 fila_insere(queue, previousNode);
             } else {
                 pilha_push(stack, previousNode);
                 break;
             }
         }
+
+        if (*aux == ')')
+            break;
 
         pilha_push(stack, value);
         i++;
