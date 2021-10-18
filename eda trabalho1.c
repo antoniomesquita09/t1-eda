@@ -10,12 +10,11 @@ typedef struct elemento
 } Elemento;
 
 /* estrutura da pilha */
-struct pilha
+typedef struct pilha
 {
 	Elemento* topo; /* aponta para o topo da pilha */
 	
-};
-typedef struct pilha Pilha;
+} Pilha;
 
 Pilha* pilha_cria (void)
 {
@@ -98,9 +97,9 @@ typedef struct avr
 	int tipo;
 	int valor;
 	char oper;
-	struct avrExp* esq;
-	struct avrExp* dir;
-	struct avrExp* pai;
+	struct avr* esq;
+	struct avr* dir;
+	struct avr* pai;
 } avrExp;
 
 avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
@@ -112,11 +111,11 @@ avrExp* arv_cria (char c, avrExp* sae, avrExp* sad, int t, int v)
 	if(t == 0)
 	{
 		p->valor = t;
-		p->oper = NULL;
+		p->oper = 'N';
 	}
 	if(t == 1)
 	{
-		p->valor = NULL;
+		p->valor = -1;
 		p->oper = c;
 	}
 	p->esq = sae;
@@ -145,8 +144,8 @@ int arv_vazia (avrExp* a)
 
 Pilha* infixtopostfix(char s[])
 {
-	Pilha* temp = pilha_cria;
-	Pilha* post = pilha_cria;
+	Pilha *temp = pilha_cria();
+	Pilha *post = pilha_cria();
 	char temp2;
 	const char x[2] = " ";
 	int i = 0, j, n = 1, temp3;
@@ -176,36 +175,36 @@ Pilha* infixtopostfix(char s[])
 				temp3 = atoi(ptr);
 				n = 1;
 				free(ptr);
-				pilha_push(post, NULL, 0, temp3);
+				pilha_push(post, 'N', 0, temp3);
 			}
 			else if(s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*')
 			{
 				temp2 = pilha_pop_op (temp);
 				if(temp2 == '*' || temp2 == '/')
 				{
-					pilha_push(post, temp2, 1, NULL);
-					pilha_push(temp, s[i], 1, NULL);
+					pilha_push(post, temp2, 1, -1);
+					pilha_push(temp, s[i], 1, -1);
 				}
 				else if( temp2 != 'f')
 				{
-					pilha_push(temp, temp2, 1, NULL);
-					pilha_push(temp, s[i], 1, NULL);
+					pilha_push(temp, temp2, 1, -1);
+					pilha_push(temp, s[i], 1, -1);
 				}
 				else
 				{
-					pilha_push(temp, s[i], 1, NULL);
+					pilha_push(temp, s[i], 1, -1);
 				}
 			}
 			else if(s[i] == '(')
 			{
-				pilha_push(temp, s[i], 1, NULL);
+				pilha_push(temp, s[i], 1, -1);
 			}
 			else if (s[i] == ')')
 			{
 				temp2 = pilha_pop_op (temp);
 				while(temp2 != '(')
 				{
-					pilha_push(temp2, s[i], 1, NULL);
+					pilha_push(post, temp2, 1, -1);
 					temp2 = pilha_pop_op (temp);
 				}
 			}
@@ -215,7 +214,7 @@ Pilha* infixtopostfix(char s[])
 	temp2 = pilha_pop_op (temp);
 	while( temp2 != 'f')
 	{
-		pilha_push(post, temp2, 1, NULL);
+		pilha_push(post, temp2, 1, -1);
 		temp2 = pilha_pop_op (temp);
 	}
 	pilha_libera (temp);
