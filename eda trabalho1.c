@@ -173,7 +173,7 @@ Pilha* infixtopostfix(char s[])
 				free(ptr);
 				pilha_push(post, 'N', 0, temp3);
 			}
-			else if(s[i] == '+' || s[i] == '-' || s[i] == '/' || s[i] == '*')
+			else if(s[i] == '/' || s[i] == '*')
 			{
 				temp2 = pilha_pop_op (temp);
 				if(temp2 == '*' || temp2 == '/')
@@ -183,15 +183,26 @@ Pilha* infixtopostfix(char s[])
 				}
 				else if( temp2 != 'f')
 				{
-					pilha_push(post, temp2, 1, -1);
-					temp2 = pilha_pop_op (temp);
-					while(temp2 != 'f')
+					pilha_push(temp, temp2, 1, -1);
+					pilha_push(temp, s[i], 1, -1);
+					
+				}
+				else
+				{
+					pilha_push(temp, s[i], 1, -1);
+				}
+			}
+			else if(s[i] == '+' || s[i] == '-')
+			{
+				temp2 = pilha_pop_op (temp);
+				if(temp2 != 'f' && temp2 != '(')
+				{
+					while(temp2 != 'f' && temp2 != '(')
 					{
 						pilha_push(post, temp2, 1, -1);
 						temp2 = pilha_pop_op (temp);
-					}
+					}	
 					pilha_push(temp, s[i], 1, -1);
-					
 				}
 				else
 				{
