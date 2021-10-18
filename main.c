@@ -239,7 +239,7 @@ Pilha* infixtopostfix(char s[])
 }*/
 
 int main(void) {
-	char s[8] = "1+2*3-4\0";
+	char s[10] = "1+2*3/4-5\0";
 
 	Pilha* stack = infixtopostfix(s);
 
