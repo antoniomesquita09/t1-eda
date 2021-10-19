@@ -54,7 +54,7 @@ int isGreater(char a, char b);
 Fila* infixtopostfix(char s[]);
 
 int main(void) {
-    char s[100] = "1+(2-3)/4-5*6+7\0";
+    char s[100] = "1+(2-3)/42-5*6+75\0";
     Fila* queue = infixtopostfix(s);
 
     printf("Postfix:\n");
@@ -62,10 +62,10 @@ int main(void) {
     while (queue->n > 0) {
         Node* cur = fila_retira(queue);
         if (cur->tipo == 0) {
-            printf("%d", cur->num);
+            printf("%d ", cur->num);
             continue;
         }
-        printf("%c", cur->info);
+        printf("%c ", cur->info);
     }
     printf("\n");
     return 1;
@@ -174,7 +174,7 @@ int isGreater(char previous, char current) {
 }
 
 Fila* infixtopostfix(char s[]) {
-    int i = 0;
+    int i = 0, n = 1;
     Pilha* stack = pilha_cria();
     Fila* queue = fila_cria();
     
@@ -186,6 +186,13 @@ Fila* infixtopostfix(char s[]) {
         aux[0] = s[i];
 
         if (isNumber(*aux)) {
+            while(isNumber(s[i+1])) {
+                i++;
+                aux = realloc (aux, (n+1) * sizeof (char));
+                aux[n] = s[i];
+                n++;
+            }
+
             int num = atoi(aux);
 
             value->tipo = 0;
@@ -233,6 +240,7 @@ Fila* infixtopostfix(char s[]) {
         }
 
         pilha_push(stack, value);
+        n = 1;
         i++;
     }
     
