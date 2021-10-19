@@ -4,7 +4,7 @@
 #include "arv_bin.h"
 
 int main(void) {
-    char s[100] = "1+2-3*4\0";
+    char s[100] = "1+2*3\0";
 
     Pilha* result = infixtopostfix(s);
 
@@ -20,10 +20,10 @@ int main(void) {
     // }
 
     Node* cur = pilha_pop(result);
-    arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia());
+    arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv_criavazia());
 
     while (!pilha_vazia(result)) {
-        Node* cur = pilha_pop(result);
+        cur = pilha_pop(result);
         criar_arv_expressao(arv_expressao, cur);
     }
 

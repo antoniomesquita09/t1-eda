@@ -28,6 +28,8 @@ void exibir_preordem(NoArv* a);
 
 void criar_arv_expressao(NoArv* arv, Node* cur);
 
+int isOperatorNode(Node* cur);
+
 NoArv* arv_criavazia(void) {
     return NULL;
 }
@@ -36,12 +38,13 @@ int arv_vazia(NoArv* a) {
     return a == NULL;
 }
 
-NoArv* arv_cria(Node* cur, NoArv* sae, NoArv* sad) {
+NoArv* arv_cria(Node* cur, NoArv* sae, NoArv* sad, NoArv* sap) {
     NoArv* p = (NoArv*) malloc(sizeof(NoArv));
     if(p == NULL) exit(1);
     p->info = cur;
     p->esq = sae;
     p->dir = sad;
+    p->pai = sap;
     return p;
 }
 
@@ -87,37 +90,32 @@ void exibir_preordem(NoArv* a) {
 	exibir_preordem(a->dir); /* mostra sad */
 }
 
+int isOperatorNode(Node* cur) {
+    return cur->tipo == 1;
+}
+
 void criar_arv_expressao(NoArv* arv, Node* cur) {
-    if (arv == NULL) return; 
+    if (arv == NULL) return;
 
-    if (cur->tipo == 1) { // isOperator
-        if (!arv->dir) {
-            NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia());
-            arv->dir = arv_dir;
-            return;
-        }
-
-        if (!arv->esq) {
-            NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia());
-            arv->esq = arv_esq;
-            return;
-        }
+    if (!arv->dir) {
+        NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia(), &arv);
+        arv->dir = arv_dir;
+        return;
     }
 
-    if (arv->info->tipo == 1) { // can add a number
-        if (!arv->dir) {
-            NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia());
-            arv->dir = arv_dir;
-            return;
-        }
-
-        if (!arv->esq) {
-            NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia());
-            arv->esq = arv_esq;
-            return;
-        }
+    if (isOperatorNode(arv->dir)) {
+        return criar_arv_expressao(arv->dir, cur);
     }
 
-    criar_arv_expressao(arv->dir, cur);
-    criar_arv_expressao(arv->esq, cur);
+    if (!arv->esq) {
+        NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), &arv);
+        arv->esq = arv_esq;
+        return;
+    }
+
+    if (isOperatorNode(arv->esq)) {
+        return criar_arv_expressao(arv->esq, cur);
+    }
+
+    return criar_arv_expressao(arv->pai->esq, cur);
 }
