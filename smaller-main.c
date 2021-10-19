@@ -1,24 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tad.h"
-
-
+#include "arv_bin.h"
 
 int main(void) {
     char s[100] = "1+2-3*4\0";
+
     Pilha* result = infixtopostfix(s);
 
-    printf("Postfix:\n");
+    NoArv* arv_expressao = arv_criavazia();
 
     while (!pilha_vazia(result)) {
         Node* cur = pilha_pop(result);
-        if (cur->tipo == 0) {
-            printf("%d ", cur->num);
-            continue;
-        }
-        printf("%c ", cur->info);
+        criar_arv_expressao(arv_expressao, cur);
     }
 
-    printf("\n");
+    printf("print tree: \n");
+
+    exibir_posordem(arv_expressao);
+
+    arv_libera(arv_expressao);
+
     return 1;
 }
