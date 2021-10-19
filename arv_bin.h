@@ -16,7 +16,7 @@ NoArv* arv_criavazia(void);
 
 int arv_vazia(NoArv* a);
 
-NoArv* arv_cria(Node* cur, NoArv* sae, NoArv* sad);
+NoArv* arv_cria(Node* cur, NoArv* sae, NoArv* sad, NoArv* sap);
 
 NoArv* arv_libera(NoArv* a);
 
@@ -98,22 +98,22 @@ void criar_arv_expressao(NoArv* arv, Node* cur) {
     if (arv == NULL) return;
 
     if (!arv->dir) {
-        NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia(), &arv);
+        NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
         arv->dir = arv_dir;
         return;
     }
 
-    if (isOperatorNode(arv->dir)) {
+    if (isOperatorNode(arv->dir->info)) {
         return criar_arv_expressao(arv->dir, cur);
     }
 
     if (!arv->esq) {
-        NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), &arv);
+        NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
         arv->esq = arv_esq;
         return;
     }
 
-    if (isOperatorNode(arv->esq)) {
+    if (isOperatorNode(arv->esq->info)) {
         return criar_arv_expressao(arv->esq, cur);
     }
 
