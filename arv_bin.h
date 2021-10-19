@@ -26,7 +26,7 @@ void exibir_posordem(NoArv* a);
 
 void exibir_preordem(NoArv* a);
 
-NoArv* criar_arv_expressao(NoArv* arv, Node* cur);
+void criar_arv_expressao(NoArv* arv, Node* cur);
 
 NoArv* arv_criavazia(void) {
     return NULL;
@@ -87,21 +87,37 @@ void exibir_preordem(NoArv* a) {
 	exibir_preordem(a->dir); /* mostra sad */
 }
 
-NoArv* criar_arv_expressao(NoArv* arv, Node* cur) {
+void criar_arv_expressao(NoArv* arv, Node* cur) {
+    if (arv == NULL) return; 
+
     if (cur->tipo == 1) { // isOperator
-        printf("%c ", cur->num);
-
-        if (arv->dir == NULL) {
-            return arv_cria(&arv, arv->esq, cur);
+        if (!arv->dir) {
+            NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia());
+            arv->dir = arv_dir;
+            return;
         }
 
-        if (arv->esq == NULL) {
-            return arv_cria(&arv, cur, arv->dir);
+        if (!arv->esq) {
+            NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia());
+            arv->esq = arv_esq;
+            return;
         }
-
-        return criar_arv_expressao(arv->pai, cur);
     }
-    // isNumber
-    printf("%d ", cur->info);
-    return criar_arv_expressao(arv->pai, cur);
+
+    if (arv->info->tipo == 1) { // can add a number
+        if (!arv->dir) {
+            NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia());
+            arv->dir = arv_dir;
+            return;
+        }
+
+        if (!arv->esq) {
+            NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia());
+            arv->esq = arv_esq;
+            return;
+        }
+    }
+
+    criar_arv_expressao(arv->dir, cur);
+    criar_arv_expressao(arv->esq, cur);
 }

@@ -118,7 +118,7 @@ Pilha* infixtopostfix(char s[]) {
         if (isNumber(*aux)) {
             while(isNumber(s[i+1])) {
                 i++;
-                aux = realloc (aux, (n+1) * sizeof (char));
+                aux = realloc(aux, (n+1) * sizeof (char));
                 aux[n] = s[i];
                 n++;
             }

@@ -10,6 +10,18 @@ int main(void) {
 
     NoArv* arv_expressao = arv_criavazia();
 
+    // while (!pilha_vazia(result)) {
+    //     Node* cur = pilha_pop(result);
+    //     if (cur->tipo == 1) {
+    //         printf("%c ", cur->info); 
+    //     } else {
+    //         printf("%d ", cur->num);
+    //     }
+    // }
+
+    Node* cur = pilha_pop(result);
+    arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia());
+
     while (!pilha_vazia(result)) {
         Node* cur = pilha_pop(result);
         criar_arv_expressao(arv_expressao, cur);
