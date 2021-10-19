@@ -202,13 +202,15 @@ Pilha* infixtopostfix(char s[])
 			else if(s[i] == '+' || s[i] == '-')
 			{
 				temp2 = pilha_pop_op (temp);
-				if(temp2 != 'f' && temp2 != '(')
+				if(temp2 != 'f')
 				{
 					while(temp2 != 'f' && temp2 != '(')
 					{
 						pilha_push(post, temp2, 1, -1);
 						temp2 = pilha_pop_op (temp);
-					}	
+					}
+					if(temp2 == '(')
+						pilha_push(temp, temp2, 1, -1);
 					pilha_push(temp, s[i], 1, -1);
 				}
 				else
@@ -220,13 +222,14 @@ Pilha* infixtopostfix(char s[])
 			{
 				pilha_push(temp, s[i], 1, -1);
 			}
-			else if (s[i] == ')')
+			else if(s[i] == ')')
 			{
 				temp2 = pilha_pop_op (temp);
 				while(temp2 != '(')
 				{
 					pilha_push(post, temp2, 1, -1);
 					temp2 = pilha_pop_op (temp);
+					
 				}
 			}
 			i++;
@@ -259,8 +262,9 @@ Pilha* infixtopostfix(char s[])
 	}
 }*/
 
+
 int main(void) {
-	char s[10] = "1+2*3/4-5\0";
+	char s[20] = "1+(2-3)/4-5*6+7\0";
 
 	Pilha* stack = infixtopostfix(s);
 
