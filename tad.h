@@ -19,14 +19,6 @@ struct pilha {
 
 typedef struct pilha Pilha;
 
-struct fila {
-    int n; /* número de elementos na fila */
-    int ini; /* posição do próximo elemento a ser retirado da lista */
-    Node* vet[N]; /* vet[0] a vet[N-1]: posições ocupáveis */
-};
-
-typedef struct fila Fila;
-
 Pilha* pilha_cria(void);
 
 void pilha_push(Pilha* p, Node* elem);
@@ -37,21 +29,13 @@ int pilha_vazia(Pilha* p);
 
 void pilha_libera(Pilha* p);
 
-Fila* fila_cria(void);
-
-void fila_insere(Fila* f, Node* v);
-
-Node* fila_retira(Fila* f);
-
-int fila_vazia(Fila* f);
-
 int isOperator(char c);
 
 int isNumber(char c);
 
 int isGreater(char a, char b);
 
-Fila* infixtopostfix(char s[]);
+Pilha* infixtopostfix(char s[]);
 
 Pilha* pilha_cria() {
     Pilha* p = (Pilha*) malloc(sizeof(Pilha));
@@ -95,42 +79,6 @@ void pilha_libera(Pilha* p) {
     free(p);
 }
 
-int fila_vazia(Fila* f) {
-    return f->n == 0;
-}
-
-Fila* fila_cria(void) {
-    Fila* f = (Fila*) malloc(sizeof(Fila));
-    f->n = 0; /* inicializa fila como vazia */
-    f->ini = 0; /* escolhe uma posição inicial */
-    return f;
-}
-
-void fila_insere(Fila* f, Node* v) {
-    int fim;
-    if (f->n == N) { /* fila cheia: capacidade esgotada */
-        printf("Capacidade da fila estourou.\n");
-        exit(1); /* aborta programa */
-    }
-    /* insere elemento na próxima posição livre */
-    fim = (f->ini + f->n) % N;
-    f->vet[fim] = v;
-    f->n++;
-}
-
-Node* fila_retira(Fila* f) {
-    Node* v;
-    if (fila_vazia(f)) {
-        printf("Fila vazia.\n");
-        exit(1); /* aborta programa */
-    }
-    /* retira elemento do início */
-    v = f->vet[f->ini];
-    f->ini = (f->ini + 1) % N;
-    f->n--;
-    return v;
-}
-
 int isOperator(char c) {
     return c == '+' || c == '-' || c == '/' || c == '*';
 }
@@ -155,10 +103,10 @@ int isGreater(char previous, char current) {
     return 0;
 }
 
-Fila* infixtopostfix(char s[]) {
+Pilha* infixtopostfix(char s[]) {
     int i = 0, n = 1;
     Pilha* stack = pilha_cria();
-    Fila* queue = fila_cria();
+    Pilha* result_stack = pilha_cria();
     
     while(s[i] != '\0') {
         Node* value = (Node*) malloc(sizeof(Node));
@@ -181,7 +129,7 @@ Fila* infixtopostfix(char s[]) {
             value->num = num;
             value->info = NULL;
 
-            fila_insere(queue, value);
+            pilha_push(result_stack, value);
             
             i++;
             continue;
@@ -198,7 +146,7 @@ Fila* infixtopostfix(char s[]) {
 
             if (*aux == ')') {
                 while(previousOperator != '(') {
-                    fila_insere(queue, previousNode);
+                    pilha_push(result_stack, previousNode);
                     previousNode = pilha_pop(stack);
                     previousOperator = previousNode->info;
                 }
@@ -209,7 +157,7 @@ Fila* infixtopostfix(char s[]) {
             // printf("%c is greater than %c: %d\n", previousOperator, *aux, isGreater(*aux, previousOperator));
 
             if (isGreater(previousOperator, *aux)) {
-                fila_insere(queue, previousNode);
+                pilha_push(result_stack, previousNode);
             } else {
                 pilha_push(stack, previousNode);
                 break;
@@ -228,10 +176,10 @@ Fila* infixtopostfix(char s[]) {
     
     while (stack->topo > 0) {
         Node* cur = pilha_pop(stack);
-        fila_insere(queue, cur);
+        pilha_push(result_stack, cur);
     }
 
     pilha_libera(stack);
 
-    return queue;
+    return result_stack;
 }
