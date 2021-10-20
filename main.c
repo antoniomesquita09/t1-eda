@@ -8,8 +8,6 @@ int main(void) {
 
     Pilha* result = infixtopostfix(s);
 
-    NoArv* arv_expressao = arv_criavazia();
-
     // while (!pilha_vazia(result)) {
     //     Node* cur = pilha_pop(result);
     //     if (cur->tipo == 1) {
@@ -20,18 +18,37 @@ int main(void) {
     // }
 
     Node* cur = pilha_pop(result);
-    arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv_criavazia());
+    NoArv* arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv_criavazia());
 
     while (!pilha_vazia(result)) {
         cur = pilha_pop(result);
         criar_arv_expressao(arv_expressao, cur);
     }
 
-    printf("print tree: \n");
+    printf("print tree simetrica: \n");
 
-    exibir_posordem(arv_expressao);
+    exibir_simetrica(arv_expressao);
+
+    printf("\n");
+    printf("raiz: %c \n", arv_expressao->info->info);
+    printf("raiz > dir: %c \n", arv_expressao->dir->info->info);
+    printf("raiz > esq: %d \n", arv_expressao->esq->info->num);
+    printf("raiz > dir > esq: %d \n", arv_expressao->dir->esq->info->num);
+    printf("raiz > dir > dir: %d \n", arv_expressao->dir->dir->info->num);
 
     arv_libera(arv_expressao);
 
     return 1;
 }
+
+// + * 3 2 1
+// arv_expressao: + * 3 2 1
+
+/*
+       +
+     /   \
+    /     \
+   1       *
+          / \
+         2   3
+*/

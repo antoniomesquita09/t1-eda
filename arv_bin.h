@@ -97,25 +97,42 @@ int isOperatorNode(Node* cur) {
 void criar_arv_expressao(NoArv* arv, Node* cur) {
     if (arv == NULL) return;
 
-    if (!arv->dir) {
+    if (!arv->dir) { // right is an free
         NoArv* arv_dir = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
         arv->dir = arv_dir;
         return;
     }
 
-    if (isOperatorNode(arv->dir->info)) {
+    if (isOperatorNode(arv->dir->info)) { // right is an operator
         return criar_arv_expressao(arv->dir, cur);
     }
 
-    if (!arv->esq) {
+    if (!arv->esq) { // left is an free
         NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
         arv->esq = arv_esq;
         return;
     }
 
-    if (isOperatorNode(arv->esq->info)) {
+    if (isOperatorNode(arv->esq->info)) { // left is an operator
         return criar_arv_expressao(arv->esq, cur);
     }
 
-    return criar_arv_expressao(arv->pai->esq, cur);
+    if (!arv->pai->esq) { // father left child is free
+        NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
+        arv->pai->esq = arv_esq;
+        return;
+    }
+
+    return criar_arv_expressao(arv->pai->pai->esq, cur);
 }
+
+// arv_expressao: + * 3 2 1
+
+/*
+       +
+     /   \
+    /     \
+   1       *
+          / \
+         2   3
+*/
