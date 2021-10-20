@@ -4,7 +4,7 @@
 #include "arv_bin.h"
 
 int main(void) {
-    char s[100] = "1+(2-3)/4-5*6+7\0";
+    char s[100] = "1*2-3/(4-5)\0";
 
     Pilha* result = infixtopostfix(s);
 
@@ -28,9 +28,8 @@ int main(void) {
         aux = 0;
     }
 
-    printf("print tree simetrica: \n");
-
-    exibir_simetrica(arv_expressao);
+    printf("print tree pos ordem: \n");
+    exibir_posordem(arv_expressao);
 
     printf("\n");
 
