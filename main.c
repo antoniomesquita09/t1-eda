@@ -4,7 +4,7 @@
 #include "arv_bin.h"
 
 int main(void) {
-    char s[100] = "1+2*3\0";
+    char s[100] = "1+(2-3)/4-5*6+7\0";
 
     Pilha* result = infixtopostfix(s);
 
@@ -20,9 +20,12 @@ int main(void) {
     Node* cur = pilha_pop(result);
     NoArv* arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv_criavazia());
 
+    int aux = 0;
+
     while (!pilha_vazia(result)) {
         cur = pilha_pop(result);
-        criar_arv_expressao(arv_expressao, cur);
+        criar_arv_expressao(arv_expressao, cur, aux);
+        aux = 0;
     }
 
     printf("print tree simetrica: \n");
@@ -30,11 +33,6 @@ int main(void) {
     exibir_simetrica(arv_expressao);
 
     printf("\n");
-    printf("raiz: %c \n", arv_expressao->info->info);
-    printf("raiz > dir: %c \n", arv_expressao->dir->info->info);
-    printf("raiz > esq: %d \n", arv_expressao->esq->info->num);
-    printf("raiz > dir > esq: %d \n", arv_expressao->dir->esq->info->num);
-    printf("raiz > dir > dir: %d \n", arv_expressao->dir->dir->info->num);
 
     arv_libera(arv_expressao);
 

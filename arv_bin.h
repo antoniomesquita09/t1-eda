@@ -26,7 +26,7 @@ void exibir_posordem(NoArv* a);
 
 void exibir_preordem(NoArv* a);
 
-void criar_arv_expressao(NoArv* arv, Node* cur);
+void criar_arv_expressao(NoArv* arv, Node* cur, int height);
 
 int isOperatorNode(Node* cur);
 
@@ -94,7 +94,7 @@ int isOperatorNode(Node* cur) {
     return cur->tipo == 1;
 }
 
-void criar_arv_expressao(NoArv* arv, Node* cur) {
+void criar_arv_expressao(NoArv* arv, Node* cur, int height) {
     if (arv == NULL) return;
 
     if (!arv->dir) { // right is an free
@@ -104,7 +104,7 @@ void criar_arv_expressao(NoArv* arv, Node* cur) {
     }
 
     if (isOperatorNode(arv->dir->info)) { // right is an operator
-        return criar_arv_expressao(arv->dir, cur);
+        return criar_arv_expressao(arv->dir, cur, height + 1);
     }
 
     if (!arv->esq) { // left is an free
@@ -114,16 +114,21 @@ void criar_arv_expressao(NoArv* arv, Node* cur) {
     }
 
     if (isOperatorNode(arv->esq->info)) { // left is an operator
-        return criar_arv_expressao(arv->esq, cur);
+        return criar_arv_expressao(arv->esq, cur, height + 1);
     }
 
-    if (!arv->pai->esq) { // father left child is free
+    while (height > 0) {
+        arv = arv->pai;
+        height--;
+    }
+
+    if (!arv->esq) { // father/grandpa left child is free
         NoArv* arv_esq = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv);
-        arv->pai->esq = arv_esq;
+        arv->esq = arv_esq;
         return;
     }
 
-    return criar_arv_expressao(arv->pai->pai->esq, cur);
+    return criar_arv_expressao(arv->esq, cur, height);
 }
 
 // arv_expressao: + * 3 2 1
@@ -135,4 +140,17 @@ void criar_arv_expressao(NoArv* arv, Node* cur) {
    1       *
           / \
          2   3
+*/
+
+// arv_expressao: + / 4 * 3 2 1
+
+/*
+       +
+     /   \
+    /     \
+   1       /
+          / \
+         *   4
+        / \
+       2   3
 */
