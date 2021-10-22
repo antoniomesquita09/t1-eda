@@ -30,9 +30,7 @@ int criar_arv_expressao(NoArv* arv, Node* cur, int height, int i);
 
 int isOperatorNode(Node* cur);
 
-int _print_t(NoArv* tree, int is_esq, int offset, int depth, char s[20][255]);
-
-void print_t(NoArv* tree);
+void print_simetrica(NoArv* tree);
 
 NoArv* arv_criavazia(void) {
     return NULL;
@@ -168,74 +166,23 @@ int criar_arv_expressao(NoArv* arv, Node* cur, int height, int i) {
 }
 
 
+void print_simetrica(NoArv* a) {
+	if (!arv_vazia(a))
+	{
+		if(a->pai== NULL)
+			printf("(");
+		if(a->info->tipo == 0)
+			printf(" %d ",a->info->num); /* mostra raiz */
+		else if(a->info->tipo == 1)
+			printf(" %c ",a->info->info); /* mostra raiz */
+		
+		printf("(");
+		print_simetrica(a->esq); /* mostra sae */
+		print_simetrica(a->dir); /* mostra sad */
+		printf(")");
+		if(a->pai== NULL)
+			printf(")");
+	}
 
-int _print_t(NoArv* tree, int is_esq, int offset, int depth, char s[20][255])
-{
-    char b[20];
-    int width = 5, i;
-    if (!tree) return 0;
-    if(tree->info->tipo == 0){
-		sprintf(b, "(%03d)", tree->info->num);
-    }
-    if(tree->info->tipo == 1){
-		sprintf(b, "(%c)", tree->info->info);
-    }
-
-    int esq  = _print_t(tree->esq,  1, offset,                depth + 1, s);
-    int dir = _print_t(tree->dir, 0, offset + esq + width, depth + 1, s);
-
-#ifdef COMPACT
-    for (i = 0; i < width; i++)
-        s[depth][offset + esq + i] = b[i];
-
-    if (depth && is_esq) {
-
-        for (int i = 0; i < width + dir; i++)
-            s[depth - 1][offset + esq + width/2 + i] = '-';
-
-        s[depth - 1][offset + esq + width/2] = '.';
-
-    } else if (depth && !is_esq) {
-
-        for (int i = 0; i < esq + width; i++)
-            s[depth - 1][offset - width/2 + i] = '-';
-
-        s[depth - 1][offset + esq + width/2] = '.';
-    }
-#else
-    for (i = 0; i < width; i++)
-        s[2 * depth][offset + esq + i] = b[i];
-
-    if (depth && is_esq) {
-
-        for (i = 0; i < width + dir; i++)
-            s[2 * depth - 1][offset + esq + width/2 + i] = '-';
-
-        s[2 * depth - 1][offset + esq + width/2] = '+';
-        s[2 * depth - 1][offset + esq + width + dir + width/2] = '+';
-
-    } else if (depth && !is_esq) {
-
-        for (i = 0; i < esq + width; i++)
-            s[2 * depth - 1][offset - width/2 + i] = '-';
-
-        s[2 * depth - 1][offset + esq + width/2] = '+';
-        s[2 * depth - 1][offset - width/2 - 1] = '+';
-    }
-#endif
-
-    return esq + width + dir;
-}
-
-void print_t(NoArv* tree)
-{
-    char s[20][255];
-    int i;
-    for (i = 0; i < 20; i++)
-        sprintf(s[i], "%80s", " ");
-
-    _print_t(tree, 0, 0, 0, s);
-
-    for (i = 0; i < 20; i++)
-        printf("%s\n", s[i]);
+	return;
 }
