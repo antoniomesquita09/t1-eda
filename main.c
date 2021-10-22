@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tad.h"
 #include "arv_bin.h"
 #include "Calcula_ArvExp.h"
 
 
 int main(void) {
-    char s[100] = "((18 + 3 *2) / 8 + 5 * 3) / 6\0";
+    char s[100];
+    printf("Digite a expressao que quer calcular\n");
+    scanf("%[^\n]", s);
 	float t;
     Pilha* result = infixtopostfix(s);
 	/* Caso queira testar os elementos da pilha
@@ -31,14 +34,15 @@ int main(void) {
         j = criar_arv_expressao(arv_expressao, cur, aux, i);
         aux = 0;
     }
-    print_t(arv_expressao);
-    
-	printf("\n Imprimir arvore: \n");
-	arv_imprime (arv_expressao);
+
 	printf("\n\n Expressao Original: \n");
 	exibir_simetrica(arv_expressao);
     printf("\n\n Expressao em pos ordem: \n");
     exibir_posordem(arv_expressao);
+	printf("\n \n");
+	
+	printf("\n Arvore com representacao aninhada \n");
+	print_simetrica(arv_expressao);
 	printf("\n \n");
     t = arv_valorEA(arv_expressao);
     int floattoint = (int) t;
