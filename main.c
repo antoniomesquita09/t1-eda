@@ -12,17 +12,7 @@ int main(void) {
     scanf("%[^\n]", s);
 	float t;
     Pilha* result = infixtopostfix(s);
-	/* Caso queira testar os elementos da pilha
-    while (!pilha_vazia(result)) {
-        Node* cur = pilha_pop(result);
-        if (cur->tipo == 1) {
-            printf("%c ", cur->info); 
-        } 
-		else {
-             printf("%d ", cur->num);
-        }
-    }
-	*/
+
     Node* cur = pilha_pop(result);
     NoArv* arv_expressao = arv_cria(cur, arv_criavazia(), arv_criavazia(), arv_criavazia());
 
